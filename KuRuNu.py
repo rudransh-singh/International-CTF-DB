@@ -12,14 +12,88 @@ def TakeInput(items: list = [], Type: list = []):
         inputlist[item] = val
     return inputlist
 
+def SearchTeam():
+    try:
+        num = (input("Enter the team number: "))
+        query = "SELECT * FROM TEAM WHERE Team_No LIKE '%d'" % (num)
+        num = cur.execute(query)
+        if num == 0:
+            print("There are no results for this query")
+        else:
+            print_table(cur.fetchall())
+    except Exception as e:
+        print("Failed to Select")
 
-def option2():
-    """
-    Function to implement option 1
-    """
-    print("Not implemented")
+def SearchTeam():
+    try:
+        num = (input("Enter the team number: "))
+        query = "SELECT * FROM TEAM WHERE Team_No LIKE '%d'" % (num)
+        num = cur.execute(query)
+        if num == 0:
+            print("There are no results for this query")
+        else:
+            print_table(cur.fetchall())
+    except Exception as e:
+        print("Failed to Select")
+        
+def SearchCt():
+    try:
+        Fname, Lname = '', ''
+        try:
+            Fname = input('Enter FirstName: ')
+            Fname = '%' + Fname + '%'
+        except:
+            Fname = '%%'
+        try:
+            Lname = input('Enter LastName: ')
+            Lname = '%' + Lname + '%'
+        except:
+            Lname = '%%'
+        query = "SELECT * FROM HACKER WHERE First_Name LIKE '%s' AND Last_Name LIKE '%s'" % (Fname, Lname)
+        num = cur.execute(query)
+        if num == 0:
+            print("There are no results for this query")
+        else:
+            print_table(cur.fetchall())
+
+    except Exception as e:
+        print("Failed to Select")
+                        
+def FirstSolve():
+    try:
+        query = "DROP VIEW IF EXISTS V1"
+        cur.execute(query)
+        query = "DROP VIEW IF EXISTS V2"
+        cur.execute(query)
+        ConID = int(input('Enter ContestID: '))
+        query = "CREATE VIEW V1 AS SELECT Prob_Number, Team_No, Sub_Time FROM SUBMISSION NATURAL JOIN SUBMITS WHERE VERDICT='CORRECT' AND Contest-ID=%d" % (ConID)
+        cur.execute(query)
+        query = "CREATE VIEW V2 AS SELECT Prob_Number,MIN(Sub_Time) AS Sub_Time FROM SUBMISSION NATURAL JOIN SUBMITS WHERE VERDICT='CORRECT' AND Contest-ID=%d GROUP BY Prob_Number" % (ConID)
+        cur.execute(query)
+        query = "SELECT Team_No,Team_Name,Prob_Number,Sub_Time FROM V1 NATURAL JOIN V2 NATURAL JOIN TEAM ORDER BY Prob_Number"
+        num = cur.execute(query)
+        if num == 0:
+            print("There are no results for this query")
+        else:
+            print_table(cur.fetchall())
+        query = "DROP VIEW IF EXISTS V1, V2"
+        cur.execute(query)
+    except Exception as e:
+        print("Failed to Select")
 
 
+
+# def projectHackers():
+#     try:
+#         query = 'SELECT '
+#         num = cur.execute(query)
+#         if num == 0:
+#             print("No hackers above the age of 18")
+#         else:
+#             print_table(cur.fetchall())
+#     except Exception as e:
+#         print("Failed to perform SELECT query")
+    
 def listAdultHackers():
     """
     Function to list all hacker who are above 18 years old
@@ -95,18 +169,17 @@ def hireAnEmployee():
 
 def InsertHacker():
     """
-Inserts Hacker Details to the Table
+    Inserts Hacker Details to the Table
     """
     try:
         # Takes emplyee details as input
-        row = TakeInput(['Hacker_ID','Fname','Lname','Age','email'].['INT','STRING','STRING','INT','STRING'])
+        row = TakeInput(['Hacker_ID','Fname','Lname','Age','email'],['INT','STRING','STRING','INT','STRING'])
         is_setter=int(input('Is the user a problem setter, [0]=NO [1]=YES '))
-        if(is_setter != 0 || is_setter !=1):
+        if(is_setter != 0 or is_setter !=1):
             print("Invalid Input")
             return
-        row[is_Setter]=is_setter
-        query = "INSERT INTO HACKER() VALUES('%s', '%c', '%s', '%s', '%s', '%s', '%c', %f, %d)" % (
-            row["Fname"], row["Minit"], row["Lname"], row["Ssn"], row["Bdate"], row["Address"], row["Sex"], row["Salary"], row["Dno"])
+        row['is_Setter']=is_setter
+        query = "INSERT INTO PROGRAMMER(Hacker_ID,First_Name,Last_Name,Age,Email_ID,is_setter) VALUES(%d, '%s', '%s', %d, '%s', %d)" % (int(row['Hacker_ID']), row['Fname'], row['LName'], int(row['Age']), row['email'], int(row['is_Setter']))
 
         print(query)
         cur.execute(query)
@@ -120,6 +193,59 @@ Inserts Hacker Details to the Table
         print(">>>>>>>>>>>>>", e)
 
     return
+
+
+def InsertTeam():
+    """
+    Inserts Team into the table
+    """
+    try:
+        row=TakeInput(['TeamNo','TeamName'],['INT','STRING'])
+        query="INSERT INTO TEAM(Team_No, Team_Name) VALUES(%d,'%s')" % (int(row['TeamNo']),row['TeamName'])
+        print(query)
+        cur.execute(query)
+        con.commit()
+        print("Inserted Into Database")
+    except Exception as e:
+        con.rollback()
+        print("Failed to insert into database")
+        print(">>>>>>>>>>>>>", e)
+
+    
+def RemoveHacker():
+    """
+    Removes Hacker Entry from the table
+    """
+    try:
+        removehackerid=int(input('Enter ID of Hacker you want to remove'))
+        query="DELETE FROM HACKER WHERE Hacker_ID=%d" % (removehackerid)
+        cur.execute(query)
+        con.commit()
+    except Exception as e:
+        con.rollback()
+        print("Failed to insert into database")
+        print(">>>>>>>>>>>>>", e)
+    return
+
+def UpdateHacker():
+    """
+    Updates Hacker info when given Hacker_ID
+    """
+    try:
+        updatehackerid=int(input('Enter ID of Hacker whose credentials you want to upgrade'))
+        print("Enter new credentials\n")
+        row = TakeInput(['Fname','Lname','Age','email'],['STRING','STRING','INT','STRING'])
+        query= " UPDATE HACKER SET First_Name='%s' Last_Name='%s' Age=%d Email_ID='%s' WHERE Hacker_ID=%d " % (row['Fname'],row['Lname'],int(row['Age']),row['email'],int(updatehackerid))
+        cur.execute(query)
+        con.commit()
+
+    except Exception as e:
+        con.rollback()
+        print("Failed to insert into database")
+        print(">>>>>>>>>>>>>", e)
+    return
+
+
 
 def dispatch(ch):
     """
