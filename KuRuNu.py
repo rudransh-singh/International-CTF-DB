@@ -36,7 +36,7 @@ def SearchTeam():
     except Exception as e:
         print("Failed to Select")
         
-def SearchCt():
+def SearchHacker():
     try:
         Fname, Lname = '', ''
         try:
@@ -81,18 +81,29 @@ def FirstSolve():
     except Exception as e:
         print("Failed to Select")
 
-
-
-# def projectHackers():
-#     try:
-#         query = 'SELECT '
-#         num = cur.execute(query)
-#         if num == 0:
-#             print("No hackers above the age of 18")
-#         else:
-#             print_table(cur.fetchall())
-#     except Exception as e:
-#         print("Failed to perform SELECT query")
+def projectHackers():
+    try:
+        query = 'SELECT CONTESTANT.Hacker_ID FROM CONTESTANT JOIN SUBMITS ON SUBMITS.Team_No = CONTESTANT.Team_No'
+        num = cur.execute(query)
+        if num == 0:
+            print("No hacker solved a single problem in this contest")
+        else:
+            print_table(cur.fetchall())
+    except Exception as e:
+        print("Failed to perform Projection query")
+        
+def averageTime():
+    try:
+        Cid = int(input('Enter Contest ID: '))
+        query1 = "SELECT Proble_mName, SEC_TO_TIME(AVG(TIME_TO_SEC(SubTime))) AverageTime FROM SUBMITS NATURAL JOIN SUBMISSION WHERE VERDICT='CORRECT' AND Contest_ID=%d GROUP BY ProblemName" % (
+            Cid)
+        num = cur.execute(query1)
+        if num == 0:
+            print("There are no results for this query")
+        else:
+            print_table(cur.fetchall())
+    except Exception as e:
+        print("Failed to perform Aggregatio query")
     
 def listAdultHackers():
     """
@@ -124,48 +135,6 @@ def listTeams():
             print_table(cur.fetchall())
     except Exception as e:
         print("Failed to perform SELECT query")
-
-
-def hireAnEmployee():
-    """
-    This is a sample function implemented for the refrence.
-    This example is related to the Employee Database.
-    In addition to taking input, you are required to handle domain errors as well
-    For example: the SSN should be only 9 characters long
-    Sex should be only M or F
-    If you choose to take Super_SSN, you need to make sure the foreign key constraint is satisfied
-    HINT: Instead of handling all these errors yourself, you can make use of except clause to print the error returned to you by MySQL
-    """
-    try:
-        # Takes emplyee details as input
-        row = {}
-        print("Enter new employee's details: ")
-        name = (input("Name (Fname Minit Lname): ")).split(' ')
-        row["Fname"] = name[0]
-        row["Minit"] = name[1]
-        row["Lname"] = name[2]
-        row["Ssn"] = input("SSN: ")
-        row["Bdate"] = input("Birth Date (YYYY-MM-DD): ")
-        row["Address"] = input("Address: ")
-        row["Sex"] = input("Sex: ")
-        row["Salary"] = float(input("Salary: "))
-        row["Dno"] = int(input("Dno: "))
-
-        query = "INSERT INTO EMPLOYEE(Fname, Minit, Lname, Ssn, Bdate, Address, Sex, Salary, Dno) VALUES('%s', '%c', '%s', '%s', '%s', '%s', '%c', %f, %d)" % (
-            row["Fname"], row["Minit"], row["Lname"], row["Ssn"], row["Bdate"], row["Address"], row["Sex"], row["Salary"], row["Dno"])
-
-        print(query)
-        cur.execute(query)
-        con.commit()
-
-        print("Inserted Into Database")
-
-    except Exception as e:
-        con.rollback()
-        print("Failed to insert into database")
-        print(">>>>>>>>>>>>>", e)
-
-    return
 
 def InsertHacker():
     """
@@ -211,7 +180,6 @@ def InsertTeam():
         print("Failed to insert into database")
         print(">>>>>>>>>>>>>", e)
 
-    
 def RemoveHacker():
     """
     Removes Hacker Entry from the table
@@ -241,11 +209,44 @@ def UpdateHacker():
 
     except Exception as e:
         con.rollback()
-        print("Failed to insert into database")
+        print("Failed to update database")
+        print(">>>>>>>>>>>>>", e)
+    return
+
+def UpdateTeam():
+    """
+    Updates Team info when given Team_ID
+    """
+    try:
+        updateteamid=int(input('Enter ID of Team Whose Name you want to update'))
+        print("Enter new credentials")
+        newteamname=input('Please enter ' + 'Team_Name' + ' of type (' + 'STRING' + '):- ')
+        query= "UPDATE TEAM SET Team_Name='%s' WHERE Team_ID=%d" % (newteamname,int(updateteamid))
+        cur.execute(query)
+        con.commit()
+    except Exception as e:
+        con.rollback()
+        print("Failed to update database")
         print(">>>>>>>>>>>>>", e)
     return
 
 
+def UpdateContest():
+    """
+    Updates info of Contest when given Contest_ID
+    """
+    try:
+        updatecontestid=int(input('Enter Id of Contest whose info you want to change'))
+        print("Enter new credentials")
+        row=TakeInput(['Start_Date','Duration','Contest_Rating'],['DATE_TIME','INT','STRING'])
+        query="UPDATE CONTEST SET Start_Date='%s' Duration=%d Contest_Rating='%s'" % (row['Start_Date'],int(row['Duration']),row['Contest_Rating'])
+        cur.execute(query)
+        con.commit()
+    except Exception as e:
+        con.rollback()
+        print("Failed to update database")
+        print(">>>>>>>>>>>>>", e)
+    return
 
 def dispatch(ch):
     """
@@ -253,13 +254,31 @@ def dispatch(ch):
     """
 
     if(ch == 1):
-        hireAnEmployee()
+        InsertHacker()
     elif(ch == 2):
-        option2()
+        InsertTeam()
     elif(ch == 3):
-        option3()
+        UpdateTeam()
     elif(ch == 4):
-        option4()
+        RemoveHacker()
+    elif(ch == 5):
+        UpdateContest()
+    elif(ch == 6):
+        UpdateHacker()
+    elif(ch == 7):
+        averageTime()
+    elif(ch == 8):
+        listTeams()
+    elif(ch == 9):
+        listAdultHackers()
+    elif(ch == 10):
+        listTeams()
+    elif(ch == 11):
+        FirstSolve()
+    elif(ch == 12):
+        SearchHacker()
+    elif(ch == 13):
+        SearchTeam()
     else:
         print("Error: Invalid Option")
 
