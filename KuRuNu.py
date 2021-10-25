@@ -151,11 +151,11 @@ def InsertHacker():
         # Takes emplyee details as input
         row = TakeInput(['Hacker_ID','Fname','Lname','Age','email'],['INT','STRING','STRING','INT','STRING'])
         is_setter=int(input('Is the user a problem setter, [0]=NO [1]=YES '))
-        if(is_setter != 0 or is_setter !=1):
+        if(is_setter != 0 and is_setter !=1):
             print("Invalid Input")
             return
         row['is_Setter']=is_setter
-        query = "INSERT INTO PROGRAMMER(Hacker_ID,First_Name,Last_Name,Age,Email_ID,is_setter) VALUES(%d, '%s', '%s', %d, '%s', %d)" % (int(row['Hacker_ID']), row['Fname'], row['LName'], int(row['Age']), row['email'], int(row['is_Setter']))
+        query = "INSERT INTO HACKER(Hacker_ID,First_Name,Last_Name,Age,Email_ID,is_setter) VALUES(%d, '%s', '%s', %d, '%s', %d)" % (int(row['Hacker_ID']), row['Fname'], row['Lname'], int(row['Age']), row['email'], int(row['is_Setter']))
 
         print(query)
         cur.execute(query)
@@ -210,7 +210,7 @@ def UpdateHacker():
         updatehackerid=int(input('Enter ID of Hacker whose credentials you want to upgrade'))
         print("Enter new credentials\n")
         row = TakeInput(['Fname','Lname','Age','email'],['STRING','STRING','INT','STRING'])
-        query= " UPDATE HACKER SET First_Name='%s' Last_Name='%s' Age=%d Email_ID='%s' WHERE Hacker_ID=%d " % (row['Fname'],row['Lname'],int(row['Age']),row['email'],int(updatehackerid))
+        query= " UPDATE HACKER SET First_Name='%s', Last_Name='%s', Age=%d, Email_ID='%s' WHERE Hacker_ID=%d " % (row['Fname'],row['Lname'],int(row['Age']),row['email'],int(updatehackerid))
         cur.execute(query)
         con.commit()
 
@@ -228,7 +228,7 @@ def UpdateTeam():
         updateteamid=int(input('Enter ID of Team Whose Name you want to update'))
         print("Enter new credentials")
         newteamname=input('Please enter ' + 'Team_Name' + ' of type (' + 'STRING' + '):- ')
-        query= "UPDATE TEAM SET Team_Name='%s' WHERE Team_ID=%d" % (newteamname,int(updateteamid))
+        query= "UPDATE TEAM SET Team_Name='%s' WHERE Team_No=%d" % (newteamname,int(updateteamid))
         cur.execute(query)
         con.commit()
     except Exception as e:
@@ -246,7 +246,7 @@ def UpdateContest():
         updatecontestid=int(input('Enter Id of Contest whose info you want to change'))
         print("Enter new credentials")
         row=TakeInput(['Start_Date','Duration','Contest_Rating'],['DATE_TIME','INT','STRING'])
-        query="UPDATE CONTEST SET Start_Date='%s' Duration=%d Contest_Rating='%s'" % (row['Start_Date'],int(row['Duration']),row['Contest_Rating'])
+        query="UPDATE CONTEST SET Start_Date='%s', Duration=%d, Contest_Rating='%s'" % (row['Start_Date'],int(row['Duration']),row['Contest_Rating'])
         cur.execute(query)
         con.commit()
     except Exception as e:
