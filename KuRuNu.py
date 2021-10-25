@@ -2,6 +2,16 @@ import subprocess as sp
 import pymysql
 import pymysql.cursors
 
+def TakeInput(items: list = [], Type: list = []):
+    """
+    Function to take input conveniently
+    """
+    inputlist = {}
+    for index, item in enumerate(items):
+        val = input('Please enter ' + item + ' of type (' + InpDesc[Type[index]] + '):- ')
+        inputlist[item] = val
+    return inputlist
+
 
 def option2():
     """
@@ -10,18 +20,36 @@ def option2():
     print("Not implemented")
 
 
-def option3():
+def listAdultHackers():
     """
-    Function to implement option 2
+    Function to list all hacker who are above 18 years old
     """
-    print("Not implemented")
+    try:
+        query = 'SELECT Hacker_ID ,First_Name, Last_Name, Age FROM HACKER WHERE Age >= 18'
+        num = cur.execute(query)
+        if num == 0:
+            print("No hackers above the age of 18")
+        else:
+            print_table(cur.fetchall())
+    except Exception as e:
+        print("Failed to perform SELECT query")
 
 
-def option4():
+def listTeams():
     """
-    Function to implement option 3
+    Function to list all teams participating in a contest
     """
-    print("Not implemented")
+    try:
+        contestID = int(input('Enter Contest ID: '))
+        query = 'SELECT Team_No, Team_Name FROM TEAM T INNER JOIN PARTICIPATES P ON T.Team_No = P.Team_No WHERE P.Contest_ID = %d' % (
+            contestID)
+        num = cur.execute(query)
+        if num == 0:
+            print("No teams participated in this contest")
+        else:
+            print_table(cur.fetchall())
+    except Exception as e:
+        print("Failed to perform SELECT query")
 
 
 def hireAnEmployee():
@@ -65,6 +93,35 @@ def hireAnEmployee():
 
     return
 
+def InsertHacker():
+    """
+    Inserts Hacker Details to the Table
+    """
+    try:
+        # Takes emplyee details as input
+        row = TakeInput(['Hacker_ID','Fname','Lname','Age','email'].['INT','STRING','STRING','INT','STRING'])
+        is_setter=int(input('Is the user a problem setter, [0]=NO [1]=YES '))
+        if(is_setter != 0 || is_setter !=1)
+        {
+            print("Invalid Input")
+            return
+        }
+        row[is_Setter]=is_setter
+        query = "INSERT INTO HACKER() VALUES('%s', '%c', '%s', '%s', '%s', '%s', '%c', %f, %d)" % (
+            row["Fname"], row["Minit"], row["Lname"], row["Ssn"], row["Bdate"], row["Address"], row["Sex"], row["Salary"], row["Dno"])
+
+        print(query)
+        cur.execute(query)
+        con.commit()
+
+        print("Inserted Into Database")
+
+    except Exception as e:
+        con.rollback()
+        print("Failed to insert into database")
+        print(">>>>>>>>>>>>>", e)
+
+    return
 
 def dispatch(ch):
     """
@@ -98,7 +155,7 @@ while(1):
                               port=3306,
                               user="root",
                               password="password",
-                              db='COMPANY',
+                              db='KuRuNu',
                               cursorclass=pymysql.cursors.DictCursor)
         tmp = sp.call('clear', shell=True)
 
