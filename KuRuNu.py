@@ -95,17 +95,15 @@ def hireAnEmployee():
 
 def InsertHacker():
     """
-    Inserts Hacker Details to the Table
+Inserts Hacker Details to the Table
     """
     try:
         # Takes emplyee details as input
         row = TakeInput(['Hacker_ID','Fname','Lname','Age','email'].['INT','STRING','STRING','INT','STRING'])
         is_setter=int(input('Is the user a problem setter, [0]=NO [1]=YES '))
-        if(is_setter != 0 || is_setter !=1)
-        {
+        if(is_setter != 0 || is_setter !=1):
             print("Invalid Input")
             return
-        }
         row[is_Setter]=is_setter
         query = "INSERT INTO HACKER() VALUES('%s', '%c', '%s', '%s', '%s', '%s', '%c', %f, %d)" % (
             row["Fname"], row["Minit"], row["Lname"], row["Ssn"], row["Bdate"], row["Address"], row["Sex"], row["Salary"], row["Dno"])
