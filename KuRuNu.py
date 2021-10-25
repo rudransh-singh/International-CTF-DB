@@ -1,28 +1,35 @@
 import subprocess as sp
 import pymysql
 import pymysql.cursors
+from prettytable import PrettyTable
 
+def print_table(json_dump):
+    x = PrettyTable()
+    x.field_names = json_dump[0].keys()
+    for row in json_dump:
+        x.add_row(row.values())
+    print(x)
 def TakeInput(items: list = [], Type: list = []):
     """
     Function to take input conveniently
     """
     inputlist = {}
     for index, item in enumerate(items):
-        val = input('Please enter ' + item + ' of type (' + InpDesc[Type[index]] + '):- ')
+        val = input('Please enter ' + item + ' of type (' + Type[index] + '):- ')
         inputlist[item] = val
     return inputlist
 
-def SearchTeam():
-    try:
-        num = (input("Enter the team number: "))
-        query = "SELECT * FROM TEAM WHERE Team_No LIKE '%d'" % (num)
-        num = cur.execute(query)
-        if num == 0:
-            print("There are no results for this query")
-        else:
-            print_table(cur.fetchall())
-    except Exception as e:
-        print("Failed to Select")
+# def SearchTeam():
+#     try:
+#         num = (input("Enter the team number: "))
+#         query = "SELECT * FROM TEAM WHERE Team_No LIKE '%d'" % (num)
+#         num = cur.execute(query)
+#         if num == 0:
+#             print("There are no results for this query")
+#         else:
+#             print_table(cur.fetchall())
+#     except Exception as e:
+#         print("Failed to Select")
 
 def SearchTeam():
     try:
@@ -313,14 +320,23 @@ while(1):
             while(1):
                 tmp = sp.call('clear', shell=True)
                 # Here taking example of Employee Mini-world
-                print("1. Option 1")  # Hire an Employee
-                print("2. Option 2")  # Fire an Employee
-                print("3. Option 3")  # Promote Employee
-                print("4. Option 4")  # Employee Statistics
-                print("5. Logout")
+                print("1. Insert Hacker ")  # Hire an Employee
+                print("2. Insert Team")  # Fire an Employee
+                print("3. Update Team")  # Promote Employee
+                print("4. Remove Hacker")  # Employee Statistics
+                print("5. Update Contest")
+                print("6. Update Hacker")
+                print("7. Calculate Average Time for a problem")
+                print("8. List All Teams")
+                print("9. List All Hackers above the age of 18")
+                print("10. List All Teams")
+                print("11. First Solved")
+                print("12. Search For a Hacker")
+                print("13. Search For a Team")
+                print("14. Logout")
                 ch = int(input("Enter choice> "))
                 tmp = sp.call('clear', shell=True)
-                if ch == 5:
+                if ch == 14:
                     exit()
                 else:
                     dispatch(ch)
