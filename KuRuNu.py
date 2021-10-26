@@ -98,7 +98,7 @@ def LeastInc():
         print("Failed to Select")       
 def projectHackers():
     try:
-        query = 'SELECT DISTINCT CONTESTANT.Hacker_ID FROM CONTESTANT JOIN SUBMITS ON SUBMITS.Team_No = CONTESTANT.Team_No'
+        query = 'SELECT DISTINCT CONTESTANT.Hacker_ID, HACKER.First_Name, HACKER.Last_Name FROM CONTESTANT JOIN SUBMITS ON SUBMITS.Team_No = CONTESTANT.Team_No JOIN HACKER ON CONTESTANT.Hacker_ID = HACKER.Hacker_ID'
         num = cur.execute(query)
         if num == 0:
             print("No hacker solved a single problem ever")
