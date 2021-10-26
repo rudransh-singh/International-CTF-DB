@@ -312,8 +312,6 @@ while(1):
     tmp = sp.call('clear', shell=True)
     
     # Can be skipped if you want to hardcode username and password
-    username = input("Username: ")
-    password = input("Password: ")
 
     try:
         # Set db name accordingly which have been create by you
