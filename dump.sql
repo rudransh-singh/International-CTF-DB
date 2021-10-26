@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 8.0.26, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.35, for Linux (x86_64)
 --
 -- Host: localhost    Database: KuRuNu
 -- ------------------------------------------------------
--- Server version	8.0.26-0ubuntu0.21.04.3
+-- Server version	5.7.35
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -21,11 +21,11 @@
 
 DROP TABLE IF EXISTS `CONTEST`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `CONTEST` (
-  `Contest_ID` int NOT NULL,
+  `Contest_ID` int(11) NOT NULL,
   `Start_Date` datetime NOT NULL,
-  `Duration` int NOT NULL,
+  `Duration` int(11) NOT NULL,
   `Contest_Rating` varchar(25) NOT NULL,
   PRIMARY KEY (`Contest_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -37,7 +37,7 @@ CREATE TABLE `CONTEST` (
 
 LOCK TABLES `CONTEST` WRITE;
 /*!40000 ALTER TABLE `CONTEST` DISABLE KEYS */;
-INSERT INTO `CONTEST` VALUES (1,'2020-05-01 18:00:00',3,'Difficult'),(2,'2020-09-02 15:00:00',4,'Extremely hard'),(3,'2020-12-06 16:00:00',2,'very easy');
+INSERT INTO `CONTEST` VALUES (1,'2020-05-01 18:00:00',300,'Difficult'),(2,'2020-09-02 15:00:00',400,'Extremely Hard'),(3,'2020-12-06 16:00:00',200,'Very Easy');
 /*!40000 ALTER TABLE `CONTEST` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -47,11 +47,11 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `CONTESTANT`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `CONTESTANT` (
-  `Hacker_ID` int NOT NULL,
-  `College_Year` int NOT NULL,
-  `Team_No` int NOT NULL,
+  `Hacker_ID` int(11) NOT NULL,
+  `College_Year` int(11) NOT NULL,
+  `Team_No` int(11) NOT NULL,
   KEY `Hacker_ID` (`Hacker_ID`),
   CONSTRAINT `CONTESTANT_ibfk_1` FOREIGN KEY (`Hacker_ID`) REFERENCES `HACKER` (`Hacker_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -73,14 +73,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `HACKER`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `HACKER` (
-  `Hacker_ID` int NOT NULL,
+  `Hacker_ID` int(11) NOT NULL,
   `First_Name` varchar(50) NOT NULL,
   `Last_Name` varchar(50) NOT NULL,
-  `Age` int NOT NULL,
+  `Age` int(11) NOT NULL,
   `Email_ID` varchar(50) NOT NULL,
-  `is_setter` int NOT NULL,
+  `is_setter` int(11) NOT NULL,
   PRIMARY KEY (`Hacker_ID`),
   UNIQUE KEY `Email_ID` (`Email_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -102,10 +102,10 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `PARTICIPATES`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `PARTICIPATES` (
-  `Team_No` int NOT NULL,
-  `Contest_ID` int NOT NULL,
+  `Team_No` int(11) NOT NULL,
+  `Contest_ID` int(11) NOT NULL,
   PRIMARY KEY (`Team_No`,`Contest_ID`),
   KEY `Contest_ID` (`Contest_ID`),
   CONSTRAINT `PARTICIPATES_ibfk_1` FOREIGN KEY (`Team_No`) REFERENCES `TEAM` (`Team_No`),
@@ -129,15 +129,15 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `PROBLEM`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `PROBLEM` (
-  `Prob_Number` int NOT NULL,
-  `Contest_ID` int NOT NULL,
-  `Hacker_ID` int NOT NULL,
+  `Prob_Number` int(11) NOT NULL,
+  `Contest_ID` int(11) NOT NULL,
+  `Hacker_ID` int(11) NOT NULL,
   `Output_Format` varchar(100) NOT NULL,
   `P_Statement` varchar(500) NOT NULL,
-  `Max_Points` int NOT NULL,
-  `Rating` int NOT NULL,
+  `Max_Points` int(11) NOT NULL,
+  `Rating` int(11) NOT NULL,
   PRIMARY KEY (`Prob_Number`,`Contest_ID`),
   KEY `Contest_ID` (`Contest_ID`),
   KEY `Hacker_ID` (`Hacker_ID`),
@@ -162,10 +162,10 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `PROBLEM_HINTS`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `PROBLEM_HINTS` (
-  `Contest_ID` int NOT NULL,
-  `Prob_Number` int NOT NULL,
+  `Contest_ID` int(11) NOT NULL,
+  `Prob_Number` int(11) NOT NULL,
   `Hints` varchar(500) NOT NULL,
   PRIMARY KEY (`Contest_ID`,`Prob_Number`,`Hints`),
   KEY `Prob_Number` (`Prob_Number`),
@@ -190,11 +190,11 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `PROBLEM_SETTER`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `PROBLEM_SETTER` (
-  `Hacker_ID` int NOT NULL,
-  `Experience` int NOT NULL,
-  `No_Of_Problems` int NOT NULL,
+  `Hacker_ID` int(11) NOT NULL,
+  `Experience` int(11) NOT NULL,
+  `No_Of_Problems` int(11) NOT NULL,
   KEY `Hacker_ID` (`Hacker_ID`),
   CONSTRAINT `PROBLEM_SETTER_ibfk_1` FOREIGN KEY (`Hacker_ID`) REFERENCES `HACKER` (`Hacker_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -216,10 +216,10 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `PROBLEM_TAGS`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `PROBLEM_TAGS` (
-  `Contest_ID` int NOT NULL,
-  `Prob_Number` int NOT NULL,
+  `Contest_ID` int(11) NOT NULL,
+  `Prob_Number` int(11) NOT NULL,
   `Tags` varchar(20) NOT NULL,
   PRIMARY KEY (`Contest_ID`,`Prob_Number`,`Tags`),
   KEY `Prob_Number` (`Prob_Number`),
@@ -244,14 +244,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `RESULT`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `RESULT` (
   `Answer_Given` varchar(100) NOT NULL,
   `Verdict` varchar(10) NOT NULL,
-  `Sub_ID` int NOT NULL,
-  `Prob_Number` int NOT NULL,
-  `Team_No` int NOT NULL,
-  `Points` int NOT NULL,
+  `Sub_ID` int(11) NOT NULL,
+  `Prob_Number` int(11) NOT NULL,
+  `Team_No` int(11) NOT NULL,
+  `Points` int(11) NOT NULL,
   PRIMARY KEY (`Answer_Given`,`Verdict`,`Sub_ID`,`Prob_Number`,`Team_No`),
   KEY `Sub_ID` (`Sub_ID`),
   KEY `Prob_Number` (`Prob_Number`),
@@ -278,9 +278,9 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `SUBMISSION`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `SUBMISSION` (
-  `Sub_ID` int NOT NULL,
+  `Sub_ID` int(11) NOT NULL,
   `Sub_Time` datetime NOT NULL,
   PRIMARY KEY (`Sub_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -302,14 +302,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `SUBMITS`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `SUBMITS` (
-  `Sub_ID` int NOT NULL,
-  `Team_No` int NOT NULL,
-  `Contest_ID` int NOT NULL,
+  `Sub_ID` int(11) NOT NULL,
+  `Team_No` int(11) NOT NULL,
+  `Contest_ID` int(11) NOT NULL,
   `Answer_Given` varchar(100) NOT NULL,
   `Verdict` varchar(10) NOT NULL,
-  `Prob_Number` int NOT NULL,
+  `Prob_Number` int(11) NOT NULL,
   PRIMARY KEY (`Sub_ID`,`Team_No`,`Contest_ID`,`Answer_Given`,`Verdict`,`Prob_Number`),
   KEY `Team_No` (`Team_No`),
   KEY `Contest_ID` (`Contest_ID`),
@@ -327,7 +327,7 @@ CREATE TABLE `SUBMITS` (
 
 LOCK TABLES `SUBMITS` WRITE;
 /*!40000 ALTER TABLE `SUBMITS` DISABLE KEYS */;
-INSERT INTO `SUBMITS` VALUES (1,1,1,'l1aNYwfr60ghFf42zrb9','CORRECT',1),(4,1,1,'SrFYh4DGOcfRsmK2AEHY','CORRECT',2),(6,1,1,'jmHWkrLUG79d7KMPvBi6','CORRECT',3),(8,1,2,'zB3umKNKVSnUYdLDZP09','CORRECT',1),(9,1,2,'I9ApDL8C8R6OYlZjPMKm','CORRECT',2),(10,1,2,'o21CTHsdKDTwyk12FhBJ','CORRECT',3),(11,1,2,'A9SyBDVZLCOK69RaPvd3','WRONG',1),(14,1,3,'F89C1L5WyeNt0fWvsHIV','WRONG',1),(15,1,3,'KdMQYBP3WqEvSHQWqQTR','WRONG',3),(16,1,3,'FnCimfpmuYfVS9aEj9ov','WRONG',2),(2,2,1,'4udhCS3SXPH2sQLJTbsZ','CORRECT',1),(12,2,2,'MPDojFYpJuVCc8lZLgQM','WRONG',2),(3,3,1,'oIJ3cxcnOTThcZ2Nx3fa','CORRECT',1),(5,3,1,'mEaoEulFqnnTlpxFZMAU','CORRECT',2),(7,3,1,'FFkahTk6DsM1ROLWKGoS','CORRECT',3),(13,3,3,'Eqol7FPIQTkVkj1IkC8N','WRONG',3);
+INSERT INTO `SUBMITS` VALUES (1,1,1,'l1aNYwfr60ghFf42zrb9','CORRECT',1),(4,1,3,'SrFYh4DGOcfRsmK2AEHY','CORRECT',2),(6,1,1,'jmHWkrLUG79d7KMPvBi6','CORRECT',3),(8,1,1,'zB3umKNKVSnUYdLDZP09','CORRECT',1),(9,1,3,'I9ApDL8C8R6OYlZjPMKm','CORRECT',2),(10,1,1,'o21CTHsdKDTwyk12FhBJ','CORRECT',3),(11,1,2,'A9SyBDVZLCOK69RaPvd3','WRONG',1),(14,1,1,'F89C1L5WyeNt0fWvsHIV','WRONG',1),(15,1,2,'KdMQYBP3WqEvSHQWqQTR','WRONG',3),(16,1,3,'FnCimfpmuYfVS9aEj9ov','WRONG',2),(2,2,2,'4udhCS3SXPH2sQLJTbsZ','CORRECT',1),(12,2,2,'MPDojFYpJuVCc8lZLgQM','WRONG',2),(3,3,3,'oIJ3cxcnOTThcZ2Nx3fa','CORRECT',1),(5,3,2,'mEaoEulFqnnTlpxFZMAU','CORRECT',2),(7,3,2,'FFkahTk6DsM1ROLWKGoS','CORRECT',3),(13,3,1,'Eqol7FPIQTkVkj1IkC8N','WRONG',3);
 /*!40000 ALTER TABLE `SUBMITS` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -337,9 +337,9 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `TEAM`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `TEAM` (
-  `Team_No` int NOT NULL,
+  `Team_No` int(11) NOT NULL,
   `Team_Name` varchar(100) NOT NULL,
   PRIMARY KEY (`Team_No`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -364,4 +364,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-10-26  6:15:59
+-- Dump completed on 2021-10-26  9:24:37
