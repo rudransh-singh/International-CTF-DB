@@ -7,7 +7,7 @@ The Team consists of the following members :-
 2) Rudransh Pratap Singh
 3) Nukit Tailor
 
-#Usage Guide
+# Usage Guide
 1. Clone the repository
 2. Run the following command to install the following dependencies
 ```
