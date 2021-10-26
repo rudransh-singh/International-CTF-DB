@@ -106,10 +106,10 @@ def LeastInc():
         
 def projectHackers():
     try:
-        query = 'SELECT CONTESTANT.Hacker_ID FROM CONTESTANT JOIN SUBMITS ON SUBMITS.Team_No = CONTESTANT.Team_No'
+        query = 'SELECT DISTINCT CONTESTANT.Hacker_ID FROM CONTESTANT JOIN SUBMITS ON SUBMITS.Team_No = CONTESTANT.Team_No'
         num = cur.execute(query)
         if num == 0:
-            print("No hacker solved a single problem in this contest")
+            print("No hacker solved a single problem ever")
         else:
             print_table(cur.fetchall())
     except Exception as e:
