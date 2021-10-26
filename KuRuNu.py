@@ -33,14 +33,15 @@ def TakeInput(items: list = [], Type: list = []):
 
 def SearchTeam():
     try:
-        num = (input("Enter the team number: "))
-        query = "SELECT * FROM TEAM WHERE Team_No LIKE '%d'" % (num)
+        num = int(input("Enter the team number: "))
+        query = "SELECT * FROM TEAM WHERE Team_No=%d" % (num)
         num = cur.execute(query)
         if num == 0:
             print("There are no results for this query")
         else:
             print_table(cur.fetchall())
     except Exception as e:
+        con.rollback()
         print("Failed to Select")
         
 def SearchHacker():
@@ -73,9 +74,9 @@ def FirstSolve():
         query = "DROP VIEW IF EXISTS V2"
         cur.execute(query)
         ConID = int(input('Enter ContestID: '))
-        query = "CREATE VIEW V1 AS SELECT Prob_Number, Team_No, Sub_Time FROM SUBMISSION NATURAL JOIN SUBMITS WHERE VERDICT='CORRECT' AND Contest-ID=%d" % (ConID)
+        query = "CREATE VIEW V1 AS SELECT Prob_Number, Team_No, Sub_Time FROM SUBMISSION NATURAL JOIN SUBMITS WHERE VERDICT='CORRECT' AND Contest_ID=%d" % (ConID)
         cur.execute(query)
-        query = "CREATE VIEW V2 AS SELECT Prob_Number,MIN(Sub_Time) AS Sub_Time FROM SUBMISSION NATURAL JOIN SUBMITS WHERE VERDICT='CORRECT' AND Contest-ID=%d GROUP BY Prob_Number" % (ConID)
+        query = "CREATE VIEW V2 AS SELECT Prob_Number,MIN(Sub_Time) AS Sub_Time FROM SUBMISSION NATURAL JOIN SUBMITS WHERE VERDICT='CORRECT' AND Contest_ID=%d GROUP BY Prob_Number" % (ConID)
         cur.execute(query)
         query = "SELECT Team_No,Team_Name,Prob_Number,Sub_Time FROM V1 NATURAL JOIN V2 NATURAL JOIN TEAM ORDER BY Prob_Number"
         num = cur.execute(query)
@@ -88,6 +89,21 @@ def FirstSolve():
     except Exception as e:
         print("Failed to Select")
 
+def LeastInc():
+    try:
+        con = int(input("Enter the Contest ID:"))
+        prob = int(input("Enter the problem number:"))
+        query = "CREATE VIEW V1 AS SELECT Team_No ,COUNT(Team_No) AS mycount FROM SUBMITS  WHERE Contest_ID=%d AND Prob_Number=%d AND Verdict='WRONG' GROUP BY Team_No" % (con,prob)
+        cur.execute(query)
+        query = "SELECT Team_No,MIN(mycount) As Incorrect from V1 GROUP BY Team_No"
+        num = cur.execute(query)
+        if num == 0:
+            print("There are no results for this query")
+        else:
+            print_table(cur.fetchall())
+    except Exception as e:
+        print("Failed to Select")    
+        
 def projectHackers():
     try:
         query = 'SELECT CONTESTANT.Hacker_ID FROM CONTESTANT JOIN SUBMITS ON SUBMITS.Team_No = CONTESTANT.Team_No'
@@ -102,7 +118,7 @@ def projectHackers():
 def averageTime():
     try:
         Cid = int(input('Enter Contest ID: '))
-        query1 = "SELECT Proble_mName, SEC_TO_TIME(AVG(TIME_TO_SEC(SubTime))) AverageTime FROM SUBMITS NATURAL JOIN SUBMISSION WHERE VERDICT='CORRECT' AND Contest_ID=%d GROUP BY ProblemName" % (
+        query1 = "SELECT Prob_Number, SEC_TO_TIME(AVG(TIME_TO_SEC(Sub_Time))) AverageTime FROM SUBMITS NATURAL JOIN SUBMISSION WHERE VERDICT='CORRECT' AND Contest_ID=%d GROUP BY Problem_Number" % (
             Cid)
         num = cur.execute(query1)
         if num == 0:
@@ -133,7 +149,7 @@ def listTeams():
     """
     try:
         contestID = int(input('Enter Contest ID: '))
-        query = 'SELECT Team_No, Team_Name FROM TEAM T INNER JOIN PARTICIPATES P ON T.Team_No = P.Team_No WHERE P.Contest_ID = %d' % (
+        query = 'SELECT T.Team_No, Team_Name FROM TEAM T INNER JOIN PARTICIPATES P ON T.Team_No = P.Team_No WHERE P.Contest_ID = %d' % (
             contestID)
         num = cur.execute(query)
         if num == 0:
@@ -209,8 +225,11 @@ def UpdateHacker():
     try:
         updatehackerid=int(input('Enter ID of Hacker whose credentials you want to upgrade'))
         print("Enter new credentials\n")
-        row = TakeInput(['Fname','Lname','Age','email'],['STRING','STRING','INT','STRING'])
-        query= " UPDATE HACKER SET First_Name='%s', Last_Name='%s', Age=%d, Email_ID='%s' WHERE Hacker_ID=%d " % (row['Fname'],row['Lname'],int(row['Age']),row['email'],int(updatehackerid))
+        row = TakeInput(['Fname','Lname','Age','email','is_setter'],['STRING','STRING','INT','STRING','INT'])
+        if(row['is_setter']!= 0 and row['is_setter']!=1):
+            print("Invalid Input")
+            return
+        query= " UPDATE HACKER SET First_Name='%s', Last_Name='%s', Age=%d, Email_ID='%s',is_setter=%d WHERE Hacker_ID=%d " % (row['Fname'],row['Lname'],int(row['Age']),row['email'],row['is_setter'],int(updatehackerid))
         cur.execute(query)
         con.commit()
 
@@ -279,7 +298,7 @@ def dispatch(ch):
     elif(ch == 9):
         listAdultHackers()
     elif(ch == 10):
-        listTeams()
+        LeastInc()
     elif(ch == 11):
         FirstSolve()
     elif(ch == 12):
@@ -329,7 +348,7 @@ while(1):
                 print("7. Calculate Average Time for a problem")
                 print("8. List All Teams")
                 print("9. List All Hackers above the age of 18")
-                print("10. List All Teams")
+                print("10. Print Least Incorrect")
                 print("11. First Solved")
                 print("12. Search For a Hacker")
                 print("13. Search For a Team")
